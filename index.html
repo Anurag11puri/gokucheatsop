@@ -641,18 +641,19 @@
         <!-- BINANCE METHOD -->
         <div id="pay-method-binance" style="display:none; animation:fadeIn 0.3s ease;">
           <div style="display:inline-block; padding:4px 12px; background:rgba(252, 213, 53, 0.1); border-radius:20px; border:1px solid rgba(252, 213, 53, 0.3); margin-bottom:1rem;">
-            <p style="font-size:0.75rem; color:#fcd535; margin:0; font-weight:600; text-transform:uppercase; letter-spacing:1px; animation:blink 2s infinite;">Scan via Binance App</p>
+            <p style="font-size:0.75rem; color:#fcd535; margin:0; font-weight:600; text-transform:uppercase; letter-spacing:1px; animation:blink 2s infinite;">Pay via Binance App</p>
           </div>
 
-          <div style="width:180px; height:180px; background:#fff; margin:0 auto; border-radius:12px; padding:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(252, 213, 53, 0.4); position:relative; overflow:hidden;">
-            <div style="position:absolute; top:0; left:0; right:0; height:3px; background:#fcd535; box-shadow:0 0 15px #fcd535, 0 0 30px #fcd535; animation: scanline 2s linear infinite; z-index:2;"></div>
-            <!-- Update the data= parameter below with your actual Binance Pay ID / Address later -->
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=513483565" alt="Binance QR Code" style="max-width:100%; height:auto; mix-blend-mode:multiply; z-index:1; position:relative;" id="binance-qr-img" />
+          <div style="background:rgba(0,0,0,0.6); margin:0 auto 1rem; border-radius:12px; padding:20px; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.5); border:1px solid rgba(252,213,53,0.2);">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+               <svg viewBox="0 0 24 24" style="width:24px; height:24px; fill:#fcd535; filter:drop-shadow(0 0 8px rgba(252,213,53,0.6));"><path d="M12 0l7.02 7.02-2.34 2.34-4.68-4.68-4.68 4.68-2.34-2.34L12 0zm0 13.56l-3.23-3.23-2.34 2.34 5.57 5.57 5.57-5.57-2.34-2.34L12 13.56zm-7.02-2.34L2.64 8.88l-2.64 2.64 2.64 2.64 2.34-2.34zm14.04 0l2.34 2.34 2.64-2.64-2.64-2.64-2.34 2.34zM12 24l-7.02-7.02 2.34-2.34 4.68 4.68 4.68-4.68 2.34 2.34L12 24z"/></svg>
+               <span style="font-size:0.75rem; color:#cbd5e1; text-transform:uppercase; letter-spacing:1px;">Send USDT to Pay ID</span>
+            </div>
+            <strong style="color:#fcd535; font-size:1.8rem; letter-spacing:2px; text-shadow:0 0 15px rgba(252,213,53,0.4);" id="binance-id-text">513483565</strong>
           </div>
           
-          <div style="margin-top:1rem; background:rgba(0,0,0,0.4); border-radius:8px; padding:8px 12px; display:flex; align-items:center; justify-content:space-between; border:1px solid rgba(255,255,255,0.05);">
-            <span style="font-size:0.75rem; color:#94a3b8; text-transform:uppercase;">Binance Pay ID</span>
-            <strong style="color:#fcd535; font-size:0.9rem; letter-spacing:0.5px;" id="binance-id-text">513483565</strong>
+          <div style="margin-top:1rem; background:rgba(0,0,0,0.4); border-radius:8px; padding:8px 12px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.05);">
+            <p style="font-size:0.75rem; color:#94a3b8; margin:0; text-align:center;">Open Binance <strong style="color:#fcd535;">&rarr;</strong> Send to Pay ID <strong style="color:#fcd535;">&rarr;</strong> Paste Order ID below</p>
           </div>
         </div>
 
@@ -660,8 +661,8 @@
 
       <form class="auth-form" onsubmit="submitPayment(event)" style="position:relative; z-index:1;">
         <div class="auth-field">
-          <label style="color:#22d3ee; font-weight:600; text-transform:uppercase; letter-spacing:1px; font-size:0.7rem;">Transaction ID (UTR)</label>
-          <input type="text" id="pay-utr" placeholder="Enter 12-digit UTR from app" required minlength="8" style="background:rgba(0,0,0,0.5); border:1px solid rgba(34,211,238,0.3); color:#fff; text-align:center; font-size:1.1rem; letter-spacing:2px; font-weight:bold; padding:0.8rem;" />
+          <label id="pay-utr-label" style="color:#22d3ee; font-weight:600; text-transform:uppercase; letter-spacing:1px; font-size:0.7rem;">Transaction ID (UTR)</label>
+          <input type="text" id="pay-utr" placeholder="Enter 12-digit UTR from app" required minlength="4" style="background:rgba(0,0,0,0.5); border:1px solid rgba(34,211,238,0.3); color:#fff; text-align:center; font-size:1.1rem; letter-spacing:2px; font-weight:bold; padding:0.8rem;" />
         </div>
         <button type="submit" class="btn-auth-submit pay-btn-glow" style="margin-top:0.8rem; background:linear-gradient(90deg, #a855f7, #22d3ee); border:none; color:#fff; font-size:0.9rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(168,85,247,0.4); transition:all 0.3s ease;">Verify & Complete Order →</button>
       </form>

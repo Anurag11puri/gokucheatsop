@@ -677,7 +677,24 @@ a.nav-link[href="#reseller"]::after,
 
 /* Mobile — disable heavy effects */
 @media(max-width:768px) {
-  .section-title::before { display: none; }
-  .section-sub::after { display: none; }
+  .section-title::before, .section-sub::after { display: none; }
+  
+  /* Disable heavy constant animations */
+  .hero-title, .cta-title, .badge-pill, .stat-num, .section-tag, .discount-pill, .card-glow, .auth-modal-box::before, .card-inner {
+    animation: none !important;
+  }
+  
+  /* Disable hover effects which can cause layout thrashing on touch */
+  .product-name, .fp-name, .service-card h3, .why-num, .nav-link, .btn-primary, .btn-buy, .btn-grab, .btn-discord, .product-card:hover, .free-panel-card:hover, .service-card:hover, .why-card:hover {
+    transition: none !important;
+    transform: none !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+  
+  /* Faster scroll reveals to avoid feeling sluggish */
+  .reveal {
+    transition: opacity 0.4s ease, transform 0.4s ease !important;
+  }
 }
 

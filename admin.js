@@ -168,7 +168,7 @@ async function loadOrders() {
       <td>${new Date(o.created_at).toLocaleDateString()}</td>
       <td>
         ${o.status === 'pending' ? `<button class="btn-sm" style="background:#22c55e; border-color:#22c55e; margin-bottom:4px;" onclick="approveOrder('${o.id}', '${o.user_id}', '${o.product_name}')">Approve</button>` : ''}
-        ${o.user_email ? `<a class="btn-sm" style="display:inline-block; margin-bottom:4px; text-decoration:none; background:#3b82f6; border-color:#3b82f6;" href="mailto:${o.user_email}?subject=Your GokuCheats Order: ${o.product_name}&body=Hello, your payment for ${o.product_name} has been approved! Here are your product details/keys: " target="_blank">Send Email</a>` : ''}
+        ${o.user_email ? `<button class="btn-sm" style="background:#3b82f6; border-color:#3b82f6; margin-bottom:4px;" onclick="prompt('Copy the user\\'s email address to send manually:', '${o.user_email}')">Get Email</button>` : ''}
         <button class="btn-sm btn-danger" onclick="deleteOrder('${o.id}')">Delete</button>
       </td>
     </tr>

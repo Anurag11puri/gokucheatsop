@@ -313,17 +313,32 @@ img{max-width:100%;display:block}
 /* Optimize for mobile performance */
 @media (max-width: 768px) {
   body {
-    scroll-behavior: smooth;
+    scroll-behavior: auto;
     overflow-x: hidden;
   }
 
+  /* Remove heavy filters to prevent lag */
+  .navbar.scrolled, .card-inner, .product-card, .free-panel-card, .service-card, .why-card, .auth-modal-box, .nav-links.open, .btn-glass, .badge-pill, .modal-overlay, .modal-box {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Solid backgrounds to replace blur */
+  .navbar.scrolled { background: rgba(7, 8, 15, 0.98) !important; }
+  .card-inner, .product-card, .free-panel-card, .service-card, .why-card { background: rgba(14, 16, 32, 1) !important; border-color: rgba(168, 85, 247, 0.2) !important; }
+
+  /* Disable heavy pseudo elements */
+  .product-card::before, .product-card::after, .free-panel-card::after, .service-card::after {
+    display: none !important;
+  }
+
   .section {
-    padding: 1rem;
+    padding: 2.5rem 1.5rem;
   }
 
   .product-card {
     margin: 0 auto;
-    width: 90%;
+    width: 100%;
   }
 
   .btn-buy {

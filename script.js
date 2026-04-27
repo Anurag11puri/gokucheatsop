@@ -74,9 +74,14 @@ navLinks.querySelectorAll('a').forEach(a => {
     };
   }
 
-  // Fewer particles on mobile for perf
+  // Disable entirely on mobile for max performance
   const isMobile = window.innerWidth < 768;
-  const COUNT = isMobile ? 35 : Math.min(75, Math.floor(window.innerWidth / 15));
+  if (isMobile) {
+    if (canvas) canvas.style.display = 'none';
+    return;
+  }
+
+  const COUNT = Math.min(75, Math.floor(window.innerWidth / 15));
   for (let i = 0; i < COUNT; i++) particles.push(createParticle());
 
   // Use squared distance to avoid Math.sqrt (O(n²) hot path)
@@ -190,6 +195,11 @@ function toggleFaq(btn) {
 
 // ── Free Panel grab ───────────────────────────────────────────
 function grabPanel(btn, slotsId) {
+  if (!currentUser) {
+    openAuth('register');
+    return;
+  }
+  
   const slotsEl = document.getElementById(slotsId);
   const current = parseInt(slotsEl.textContent.replace(/\D/g, '')) || 0;
 
@@ -269,7 +279,7 @@ async function loadSiteData() {
           <span class="price-new">₹${p.price}</span>
         </div>
         <div style="display:flex; gap:0.5rem; margin-top:1.5rem;">
-          ${p.video_url ? `<a href="${p.video_url}" target="_blank" class="btn-buy" style="background:rgba(34,211,238,0.1); border:1px solid #22d3ee; color:#22d3ee; flex:1;">Watch Now</a>` : ''}
+          ${p.video_url ? `<a href="#" onclick="if(!currentUser){ openAuth('register'); return false; } else { window.open('${p.video_url}', '_blank'); return false; }" class="btn-buy" style="background:rgba(34,211,238,0.1); border:1px solid #22d3ee; color:#22d3ee; flex:1;">Watch Now</a>` : ''}
           <button onclick="openPlanModal('${p.id}')" class="btn-buy ${p.tag === 'BEST VALUE' ? 'btn-gold' : ''}" style="flex:2;">Buy Now →</button>
         </div>
       </div>
@@ -424,6 +434,10 @@ let currentPayPriceInr = 0;
 let currentPayPriceUsd = 0;
 
 function openPlanModal(productId) {
+  if (!currentUser) {
+    openAuth('register');
+    return;
+  }
   console.log("Opening plan modal for ID:", productId);
   if (!allProducts || allProducts.length === 0) {
     console.warn("allProducts is empty, attempting to reload...");
@@ -549,6 +563,7 @@ function switchPaymentMethod(method) {
   const priceEl = document.getElementById('pay-product-price');
   const symEl = document.getElementById('pay-currency-symbol');
   const utrInput = document.getElementById('pay-utr');
+  const utrLabel = document.getElementById('pay-utr-label');
   
   if (method === 'upi') {
     btnUpi.style.background = 'linear-gradient(90deg, #22d3ee, #0ea5e9)';
@@ -565,7 +580,8 @@ function switchPaymentMethod(method) {
     priceEl.textContent = currentPayPriceInr;
     symEl.textContent = '₹';
     symEl.style.color = '#22d3ee';
-    utrInput.placeholder = 'Enter 12-digit UTR from app';
+    if(utrInput) utrInput.placeholder = 'Enter 12-digit UTR from app';
+    if(utrLabel) utrLabel.textContent = 'Transaction ID (UTR)';
   } else {
     btnBinance.style.background = 'linear-gradient(90deg, #fcd535, #f59e0b)';
     btnBinance.style.color = '#000';
@@ -581,7 +597,8 @@ function switchPaymentMethod(method) {
     priceEl.textContent = currentPayPriceUsd;
     symEl.textContent = 'USDT ';
     symEl.style.color = '#fcd535';
-    utrInput.placeholder = 'Enter Binance Pay Order/Tx ID';
+    if(utrInput) utrInput.placeholder = 'Enter Binance Pay Order/Tx ID';
+    if(utrLabel) utrLabel.textContent = 'Binance Order ID';
   }
 }
 
@@ -608,7 +625,7 @@ async function submitPayment(event) {
   const currencySym = document.getElementById('pay-currency-symbol').textContent.trim();
   const prodPrice = `${currencySym} ${prodPriceNum}`;
   
-  if (utr.length < 8) {
+  if (utr.length < 4) {
     msgEl.textContent = 'Please enter a valid Transaction / Order ID.';
     msgEl.className = 'auth-msg error';
     return;
@@ -630,13 +647,13 @@ async function submitPayment(event) {
     }]);
 
     if (error) {
-      console.error(error);
-      msgEl.textContent = 'Failed to submit order. Please contact support via Discord.';
+      console.error("Supabase Order Insert Error:", error);
+      msgEl.textContent = '❌ Failed: ' + (error.message || 'Check database schema/RLS');
       msgEl.className = 'auth-msg error';
       return;
     }
 
-    msgEl.textContent = 'Payment submitted! You will get your product on your registered email once approved.';
+    msgEl.textContent = '✅ Payment submitted! Admin will verify and approve your order soon.';
     msgEl.className = 'auth-msg success';
     msgEl.style.color = '#a855f7';
     
@@ -656,8 +673,20 @@ setTimeout(() => {
   checkAnnouncements();
 }, 800);
 
+// Auto-popup auth after 5 seconds
+setTimeout(() => {
+  if (!currentUser && !sessionStorage.getItem('auth_popup_shown')) {
+    openAuth('register');
+    sessionStorage.setItem('auth_popup_shown', 'true');
+  }
+}, 5000);
+
 // ── Reseller Modal Helpers ────────────────────────────────────
 function openResellerPurchaseModal() {
+  if (!currentUser) {
+    openAuth('register');
+    return;
+  }
   document.getElementById('reseller-purchase-modal').classList.add('active');
 }
 
