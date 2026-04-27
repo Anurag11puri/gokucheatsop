@@ -337,72 +337,84 @@ async function handleEmailChange(e) {
 }
 
 /* ── Change password with email OTP ──────────────────────── */
-let _otpSent = false;
-
-async function sendPasswordOtp() {
-  if (!currentUser) return;
-  const btn = document.getElementById('send-otp-btn');
-  btn.disabled = true; btn.textContent = 'Sending OTP...';
-
-  const { error } = await _sb.auth.signInWithOtp({
-    email: currentUser.email,
-    options: { shouldCreateUser: false }
-  });
-
-  btn.disabled = false;
-  if (error) {
-    btn.textContent = 'Send OTP';
-    showSettingsMsg('error', '❌ Could not send OTP: ' + error.message);
-    return;
-  }
-  btn.textContent = 'Resend OTP';
-  _otpSent = true;
-  document.getElementById('otp-section').style.display = 'flex';
-  showSettingsMsg('success', `✅ OTP sent to ${currentUser.email}. Check your inbox!`);
-}
-
+/* ── Password Change in Settings ──────────────────────────── */
 async function handlePasswordChange(e) {
   e.preventDefault();
-  if (!_otpSent) { showSettingsMsg('error', '❌ Please send OTP first.'); return; }
-
-  const otp = document.getElementById('pw-otp').value.trim();
-  const newPw = document.getElementById('new-password').value;
-  const confPw = document.getElementById('confirm-password').value;
-
-  if (!otp) { showSettingsMsg('error', '❌ Enter the OTP from your email.'); return; }
-  if (newPw.length < 8) { showSettingsMsg('error', '❌ Password needs 8+ characters.'); return; }
-  if (newPw !== confPw) { showSettingsMsg('error', '❌ Passwords do not match.'); return; }
-
+  console.log('Handling password change in settings...');
+  
+  const currentPass = document.getElementById('current-password').value;
+  const newPass = document.getElementById('new-password').value;
+  const confirmPass = document.getElementById('confirm-password').value;
   const btn = document.getElementById('change-pw-btn');
-  btn.disabled = true; btn.textContent = 'Verifying OTP...';
-
-  // Verify OTP (this refreshes the session token)
-  const { error: otpErr } = await _sb.auth.verifyOtp({
-    email: currentUser.email,
-    token: otp,
-    type: 'email'
-  });
-
-  if (otpErr) {
-    btn.disabled = false; btn.textContent = 'Change Password';
-    showSettingsMsg('error', '❌ Invalid or expired OTP.'); return;
+  
+  // Validation
+  if (!currentPass) {
+    showSettingsMsg('error', '❌ Enter your current password.');
+    return;
   }
-
-  btn.textContent = 'Updating password...';
-
-  const { error: pwErr } = await _sb.auth.updateUser({ password: newPw });
-
-  btn.disabled = false; btn.textContent = 'Change Password';
-
-  if (pwErr) { showSettingsMsg('error', '❌ ' + (pwErr.message || 'Password update failed.')); return; }
-
-  showSettingsMsg('success', '✅ Password changed successfully!');
-  _otpSent = false;
-  document.getElementById('otp-section').style.display = 'none';
-  ['pw-otp', 'new-password', 'confirm-password'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
+  
+  if (newPass.length < 8) {
+    showSettingsMsg('error', '❌ New password must be at least 8 characters.');
+    return;
+  }
+  
+  if (newPass !== confirmPass) {
+    showSettingsMsg('error', '❌ New passwords do not match.');
+    return;
+  }
+  
+  if (currentPass === newPass) {
+    showSettingsMsg('error', '❌ New password must be different from current password.');
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = 'Verifying...';
+  
+  try {
+    // Verify current password by attempting to sign in
+    const { error: signInError } = await _sb.auth.signInWithPassword({
+      email: currentUser.email,
+      password: currentPass
+    });
+    
+    if (signInError) {
+      btn.disabled = false;
+      btn.textContent = 'Update Password';
+      console.error('Current password verification failed:', signInError);
+      showSettingsMsg('error', '❌ Current password is incorrect.');
+      return;
+    }
+    
+    // Current password is correct, now update to new password
+    btn.textContent = 'Updating password...';
+    
+    const { error: updateError } = await _sb.auth.updateUser({
+      password: newPass
+    });
+    
+    btn.disabled = false;
+    btn.textContent = 'Update Password';
+    
+    if (updateError) {
+      console.error('Password update error:', updateError);
+      showSettingsMsg('error', '❌ ' + (updateError.message || 'Failed to update password.'));
+      return;
+    }
+    
+    showSettingsMsg('success', '✅ Password updated successfully!');
+    
+    // Clear form
+    document.getElementById('current-password').value = '';
+    document.getElementById('new-password').value = '';
+    document.getElementById('confirm-password').value = '';
+    
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Update Password';
+    console.error('Unexpected error during password change:', err);
+    showSettingsMsg('error', '❌ An unexpected error occurred. Please try again.');
+  }
 }
 
 /* ── Helpers ──────────────────────────────────────────────── */
@@ -455,5 +467,174 @@ function shakeBtn(id) {
   btn.style.animation = 'shake .4s ease';
 }
 
+/* ── Forgot Password ───────────────────────────────────────── */
+function openForgotPasswordModal(e) {
+  if (e) e.preventDefault();
+  const modal = document.getElementById('forgot-password-modal');
+  if (!modal) {
+    console.error('Forgot password modal not found!');
+    return;
+  }
+  modal.classList.add('active');
+  const emailInput = document.getElementById('forgot-email');
+  if (emailInput) emailInput.value = '';
+  const msgEl = document.getElementById('forgot-password-msg');
+  if (msgEl) {
+    msgEl.className = 'auth-msg';
+    msgEl.textContent = '';
+  }
+}
+
+async function handleForgotPassword(e) {
+  e.preventDefault();
+  console.log('Handling forgot password...');
+  
+  const email = document.getElementById('forgot-email').value.trim();
+  const msgEl = document.getElementById('forgot-password-msg');
+  const submitBtn = document.getElementById('forgot-password-submit-btn');
+  
+  if (!email || !email.includes('@')) {
+    if (msgEl) {
+      msgEl.className = 'auth-msg error';
+      msgEl.textContent = '❌ Please enter a valid email address.';
+    }
+    return;
+  }
+  
+  if (submitBtn) submitBtn.disabled = true;
+  if (submitBtn) submitBtn.textContent = 'Sending...';
+  
+  try {
+    const { error } = await _sb.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + window.location.pathname + '?reset=true'
+    });
+    
+    if (submitBtn) submitBtn.disabled = false;
+    if (submitBtn) submitBtn.textContent = 'Send Reset Link →';
+    
+    if (error) {
+      console.error('Reset password error:', error);
+      if (msgEl) {
+        msgEl.className = 'auth-msg error';
+        msgEl.textContent = '❌ ' + (error.message || 'Failed to send reset link. Please try again.');
+      }
+      return;
+    }
+    
+    if (msgEl) {
+      msgEl.className = 'auth-msg success';
+      msgEl.textContent = '✅ Check your email for a password reset link!';
+    }
+    
+    setTimeout(() => {
+      closeModal('forgot-password-modal');
+    }, 3000);
+    
+  } catch (err) {
+    console.error('Unexpected error during password reset:', err);
+    if (submitBtn) submitBtn.disabled = false;
+    if (submitBtn) submitBtn.textContent = 'Send Reset Link →';
+    if (msgEl) {
+      msgEl.className = 'auth-msg error';
+      msgEl.textContent = '❌ An unexpected error occurred. Please try again.';
+    }
+  }
+}
+
+/* ── Terms Modal ───────────────────────────────────────────── */
+function openTermsModal(e) {
+  if (e) e.preventDefault();
+  document.getElementById('terms-modal').classList.add('active');
+}
+
+/* ── Password Reset Completion ───────────────────────────────── */
+async function handlePasswordReset(e) {
+  e.preventDefault();
+  console.log('Handling password reset...');
+  
+  const newPass = document.getElementById('reset-new-pass').value;
+  const confirmPass = document.getElementById('reset-confirm-pass').value;
+  const msgEl = document.getElementById('reset-password-msg');
+  const submitBtn = document.getElementById('reset-password-submit-btn');
+  
+  if (newPass !== confirmPass) {
+    if (msgEl) {
+      msgEl.className = 'auth-msg error';
+      msgEl.textContent = '❌ Passwords do not match.';
+    }
+    return;
+  }
+  
+  if (newPass.length < 8) {
+    if (msgEl) {
+      msgEl.className = 'auth-msg error';
+      msgEl.textContent = '❌ Password must be at least 8 characters.';
+    }
+    return;
+  }
+  
+  if (submitBtn) submitBtn.disabled = true;
+  if (submitBtn) submitBtn.textContent = 'Updating...';
+  
+  try {
+    const { error } = await _sb.auth.updateUser({ password: newPass });
+    
+    if (submitBtn) submitBtn.disabled = false;
+    if (submitBtn) submitBtn.textContent = 'Update Password →';
+    
+    if (error) {
+      console.error('Password update error:', error);
+      if (msgEl) {
+        msgEl.className = 'auth-msg error';
+        msgEl.textContent = '❌ ' + (error.message || 'Failed to update password. Please try again.');
+      }
+      return;
+    }
+    
+    if (msgEl) {
+      msgEl.className = 'auth-msg success';
+      msgEl.textContent = '✅ Password updated successfully! Redirecting...';
+    }
+    
+    setTimeout(() => {
+      closeModal('reset-password-modal');
+      window.location.href = window.location.origin + window.location.pathname;
+    }, 2000);
+    
+  } catch (err) {
+    console.error('Unexpected error during password reset:', err);
+    if (submitBtn) submitBtn.disabled = false;
+    if (submitBtn) submitBtn.textContent = 'Update Password →';
+    if (msgEl) {
+      msgEl.className = 'auth-msg error';
+      msgEl.textContent = '❌ An unexpected error occurred. Please try again.';
+    }
+  }
+}
+
+/* ── Check for password reset redirect ────────────────────────── */
+function checkPasswordResetRedirect() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('reset') === 'true') {
+    // Check if user has a valid session for password reset
+    _sb.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        // User is authenticated via magic link, show reset form
+        setTimeout(() => {
+          const resetModal = document.getElementById('reset-password-modal');
+          if (resetModal) {
+            resetModal.classList.add('active');
+            // Clear URL to avoid resubmitting on refresh
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+        }, 500);
+      }
+    });
+  }
+}
+
 // Start auth on DOM ready
-document.addEventListener('DOMContentLoaded', initAuth);
+document.addEventListener('DOMContentLoaded', () => {
+  initAuth();
+  checkPasswordResetRedirect();
+});
