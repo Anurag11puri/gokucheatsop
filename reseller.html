@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reseller Dashboard — Goku Cheats</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    :root {
+      --gold: #fcd34d;
+      --gold-dim: rgba(252,211,77,.15);
+      --gold-border: rgba(252,211,77,.3);
+      --cyan: #22d3ee;
+      --purple: #a855f7;
+      --bg: #070913;
+      --glass: rgba(255,255,255,.03);
+      --border: rgba(255,255,255,.08);
+      --font-head: 'Orbitron', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: #e2e8f0;
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Background Animations ── */
+    @keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
+    @keyframes pulse-glow { 0%, 100% { opacity: 0.5; filter: blur(80px); } 50% { opacity: 0.8; filter: blur(100px); } }
+
+    /* ── Background orbs ── */
+    .orb { position: fixed; border-radius: 50%; pointer-events: none; z-index: 0; animation: pulse-glow 8s ease-in-out infinite; }
+    .orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(252,211,77,.1) 0%, transparent 70%); top: -100px; right: -100px; animation-delay: 0s; }
+    .orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(168,85,247,.1) 0%, transparent 70%); bottom: -100px; left: -100px; animation-delay: -4s; }
+    .orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(34,211,238,.1) 0%, transparent 70%); top: 40%; left: 30%; animation-delay: -2s; }
+
+    /* ── Floating 3D Elements ── */
+    .float-el { position: fixed; z-index: 0; pointer-events: none; animation: float var(--dur, 10s) ease-in-out infinite; opacity: var(--op, 0.3); }
+    .el-ring { width: var(--sz); height: var(--sz); border: 2px solid var(--col); border-radius: 50%; }
+    .el-diamond { width: var(--sz); height: var(--sz); border: 2px solid var(--col); transform: rotate(45deg); }
+
+    /* ── Header ── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(7,9,19,.7);
+      border-bottom: 1px solid var(--gold-border);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      padding: 0 2rem;
+      height: 70px;
+      display: flex; align-items: center; justify-content: space-between;
+      box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    }
+    .logo { font-family: var(--font-head); font-size: 1.3rem; font-weight: 900; display: flex; align-items: center; gap: .5rem; text-shadow: 0 0 10px rgba(252,211,77,0.3); }
+    .logo-badge { background: linear-gradient(90deg,#fcd34d,#f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .portal-tag { font-size: .65rem; color: #fcd34d; font-weight: 700; font-family: var(--font-body); letter-spacing: .1em; text-transform: uppercase; margin-left: .5rem; padding: 0.2rem 0.5rem; border: 1px solid rgba(252,211,77,0.3); border-radius: 50px; background: rgba(252,211,77,0.1); }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .user-chip {
+      display: flex; align-items: center; gap: .5rem;
+      background: linear-gradient(90deg, rgba(252,211,77,0.1), rgba(249,115,22,0.05));
+      border: 1px solid var(--gold-border);
+      border-radius: 50px; padding: .4rem 1.2rem;
+      font-size: .85rem; font-weight: 700; color: var(--gold);
+      box-shadow: inset 0 0 10px rgba(252,211,77,0.1);
+    }
+    .user-chip .dot { width: 8px; height: 8px; background: #4ade80; border-radius: 50%; box-shadow: 0 0 10px #4ade80; animation: pulse-glow 2s infinite; }
+    .btn-logout {
+      background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3);
+      color: #f87171; font-size: .85rem; font-weight: 700;
+      padding: .4rem 1.2rem; border-radius: 8px; cursor: pointer;
+      transition: all .3s ease; font-family: var(--font-body);
+    }
+    .btn-logout:hover { background: rgba(239,68,68,.25); box-shadow: 0 0 15px rgba(239,68,68,0.3); transform: translateY(-2px); }
+
+    /* ── Layout ── */
+    main { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+    /* ── Welcome banner ── */
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(252,211,77,.1), rgba(249,115,22,.05));
+      border: 1px solid var(--gold-border);
+      border-radius: 24px; padding: 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1.5rem;
+      position: relative; overflow: hidden;
+      box-shadow: 0 10px 40px rgba(252,211,77,0.08), inset 0 0 20px rgba(252,211,77,0.05);
+    }
+    .welcome-banner::before {
+      content: '💼';
+      position: absolute; right: 2rem; top: 50%; transform: translateY(-50%);
+      font-size: 8rem; opacity: .04; filter: drop-shadow(0 0 20px rgba(252,211,77,0.5));
+    }
+    .welcome-title { font-family: var(--font-head); font-size: 1.8rem; font-weight: 900; color: #fff; margin-bottom: .5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+    .welcome-title span { color: var(--gold); }
+    .welcome-sub { font-size: .95rem; color: #cbd5e1; max-width: 600px; line-height: 1.6; }
+    .discount-pill {
+      background: linear-gradient(90deg,#fcd34d,#f97316);
+      color: #000; font-weight: 900; font-size: 1rem;
+      padding: .8rem 2rem; border-radius: 50px;
+      white-space: nowrap; letter-spacing: .05em;
+      box-shadow: 0 5px 20px rgba(252,211,77,0.4);
+      transform: scale(1); transition: transform 0.3s;
+    }
+    .welcome-banner:hover .discount-pill { transform: scale(1.05); }
+
+    /* ── Stats row ── */
+    .stats-row { display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+    .stat-card {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 16px; padding: 1.5rem;
+      display: flex; flex-direction: column; gap: .5rem;
+      transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px); position: relative; overflow: hidden;
+    }
+    .stat-card::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transform: skewX(-20deg); transition: 0.5s; }
+    .stat-card:hover::after { left: 150%; }
+    .stat-card:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.15); background: rgba(255,255,255,0.04); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+    .stat-val { font-family: var(--font-head); font-size: 2.2rem; font-weight: 900; text-shadow: 0 0 20px currentColor; }
+    .stat-lbl { font-size: .8rem; color: #94a3b8; text-transform: uppercase; letter-spacing: .1em; font-weight: 600; }
+    .gold { color: var(--gold); }
+    .green { color: #4ade80; }
+    .cyan { color: var(--cyan); }
+    .purple { color: var(--purple); }
+
+    /* ── Section header ── */
+    .sec-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 1rem; }
+    .sec-title { font-family: var(--font-head); font-size: 1.2rem; font-weight: 900; color: #fff; letter-spacing: .05em; display: flex; align-items: center; gap: .8rem; }
+    .sec-title span { color: var(--gold); }
+
+    /* ── Products grid ── */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 2rem; margin-bottom: 4rem; }
+    .product-card {
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-radius: 20px; padding: 1.8rem; position: relative;
+      overflow: hidden; display: flex; flex-direction: column;
+      transition: all .4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(10px);
+    }
+    .product-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at top right, rgba(252,211,77,.08), transparent 70%);
+      pointer-events: none; transition: opacity 0.3s; opacity: 0;
+    }
+    .product-card:hover::before { opacity: 1; }
+    .product-card:hover { transform: translateY(-8px); border-color: var(--gold-border); box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px rgba(252,211,77,0.1); }
+    .card-badge {
+      position: absolute; top: 1.2rem; right: 1.2rem;
+      background: linear-gradient(90deg,#fcd34d,#f97316);
+      color: #000; font-size: .65rem; font-weight: 900;
+      letter-spacing: .1em; padding: .3rem .8rem; border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(252,211,77,0.3);
+    }
+    .card-icon { font-size: 2.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
+    .card-name { font-family: var(--font-head); font-size: 1.1rem; font-weight: 900; color: #fff; margin-bottom: .5rem; }
+    .card-desc { font-size: .85rem; color: #94a3b8; line-height: 1.6; margin-bottom: 1.5rem; flex: 1; }
+    .plans-list { display: flex; flex-direction: column; gap: .6rem; }
+    .plan-row {
+      background: rgba(0,0,0,.4); border-radius: 12px;
+      padding: .8rem 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid rgba(255,255,255,.05); transition: border-color 0.3s;
+    }
+    .plan-row:hover { border-color: rgba(252,211,77,0.3); background: rgba(252,211,77,0.02); }
+    .plan-name { font-size: .75rem; color: #cbd5e1; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
+    .plan-prices { display: flex; align-items: center; gap: .8rem; }
+    .price-orig { font-size: .85rem; color: #64748b; text-decoration: line-through; }
+    .price-disc { font-family: var(--font-head); font-size: 1.1rem; font-weight: 900; color: var(--gold); text-shadow: 0 0 10px rgba(252,211,77,0.3); }
+    .saving-tag { font-size: .7rem; font-weight: 700; color: #4ade80; background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.2); border-radius: 50px; padding: .2rem .6rem; }
+    .price-usd { font-size: .75rem; color: #64748b; margin-top: .2rem; }
+
+    /* ── Info box ── */
+    .info-box {
+      background: linear-gradient(180deg, rgba(252,211,77,.03), rgba(0,0,0,0.5));
+      border: 1px solid var(--gold-border);
+      border-radius: 24px; padding: 2.5rem;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    .info-box h3 { font-family: var(--font-head); font-size: 1rem; color: var(--gold); margin-bottom: 1.5rem; letter-spacing: .1em; display: flex; align-items: center; gap: 0.8rem; }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 1.5rem; }
+    .step {
+      background: rgba(0,0,0,.4); border-radius: 16px; padding: 1.5rem;
+      border: 1px solid rgba(255,255,255,.05);
+      display: flex; flex-direction: column; gap: .8rem;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .step:hover { transform: translateY(-5px); border-color: rgba(252,211,77,0.3); background: rgba(252,211,77,0.02); }
+    .step-num { font-family: var(--font-head); font-size: 1.8rem; font-weight: 900; color: var(--gold-border); text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+    .step-title { font-size: .95rem; font-weight: 700; color: #fff; }
+    .step-desc { font-size: .85rem; color: #94a3b8; line-height: 1.6; }
+    .step-desc a { color: #a855f7; text-decoration: none; font-weight: 600; transition: color 0.3s; }
+    .step-desc a:hover { color: #c084fc; text-shadow: 0 0 10px rgba(168,85,247,0.4); }
+
+    /* ── Payment details ── */
+    .payment-row { display: flex; gap: 2rem; margin-top: 2.5rem; flex-wrap: wrap; }
+    .pay-method {
+      flex: 1; min-width: 250px;
+      background: rgba(0,0,0,.4); border-radius: 16px; padding: 1.5rem;
+      border: 1px solid rgba(255,255,255,.05); text-align: center;
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .pay-method:hover { transform: translateY(-5px); }
+    .pay-method:nth-child(1):hover { border-color: rgba(34,211,238,0.3); }
+    .pay-method:nth-child(2):hover { border-color: rgba(252,213,53,0.3); }
+    .pay-label { font-size: .8rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 1rem; }
+    .pay-id { font-size: 1rem; font-weight: 800; margin-top: 1rem; letter-spacing: 0.5px; }
+
+    /* ── Empty state ── */
+    .empty { text-align: center; color: #64748b; padding: 4rem 2rem; font-size: 1rem; background: rgba(0,0,0,0.2); border-radius: 16px; border: 1px dashed rgba(255,255,255,0.1); }
+    .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
+
+    /* ── Login Screen ── */
+    #login-screen {
+      display: none; min-height: 100vh;
+      align-items: center; justify-content: center; flex-direction: column;
+      position: relative; z-index: 1;
+    }
+    .login-box {
+      max-width: 440px; width: 100%; padding: 2.5rem;
+      background: rgba(13,17,23,0.8); border: 1px solid var(--gold-border);
+      border-radius: 24px; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 30px rgba(252,211,77,0.1);
+      position: relative; overflow: hidden;
+    }
+    .login-box::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at top right, rgba(252,211,77,0.1), transparent 60%); pointer-events: none;
+    }
+    .login-header { text-align: center; margin-bottom: 2.5rem; position: relative; z-index: 1; }
+    .login-icon { font-size: 3.5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 15px rgba(252,211,77,0.3)); }
+    .login-title { font-family: var(--font-head); font-size: 1.8rem; font-weight: 900; color: var(--gold); margin-bottom: .5rem; letter-spacing: 1px; }
+    .login-sub { font-size: .9rem; color: #94a3b8; line-height: 1.5; }
+    .login-input {
+      width: 100%; padding: 1rem 1.2rem;
+      background: rgba(0,0,0,.5); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; color: #fff; font-family: var(--font-body);
+      font-size: .95rem; outline: none; transition: all .3s;
+    }
+    .login-input:focus { border-color: var(--gold); box-shadow: 0 0 15px rgba(252,211,77,0.2); background: rgba(0,0,0,0.7); }
+    .login-label { font-size: .75rem; color: #cbd5e1; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; display: block; margin-bottom: .5rem; }
+    .login-btn {
+      width: 100%; padding: 1.1rem; margin-top: 1.5rem;
+      background: linear-gradient(90deg,#fcd34d,#f97316);
+      border: none; border-radius: 12px; color: #000;
+      font-weight: 900; font-size: 1rem; font-family: var(--font-head);
+      letter-spacing: .1em; cursor: pointer; transition: all .3s;
+      box-shadow: 0 5px 20px rgba(252,211,77,0.3); text-transform: uppercase;
+    }
+    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(252,211,77,0.5); }
+    .back-link {
+      display: inline-block; margin-top: 2rem; font-size: .85rem; color: #64748b;
+      text-decoration: none; transition: color .3s; font-weight: 600;
+    }
+    .back-link:hover { color: var(--gold); }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: rgba(252,211,77,.3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(252,211,77,.5); }
+
+    @media(max-width:768px){
+      main { padding: 1.5rem 1rem 3rem; }
+      .welcome-banner { padding: 1.8rem; }
+      header { padding: 0 1rem; height: 60px; }
+      .welcome-banner::before { font-size: 5rem; right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      ⚡ <span>GOKU<span class="logo-badge">CHEATS</span></span>
+      <span class="portal-tag">Reseller Portal</span>
+    </div>
+    <div class="header-right">
+      <div class="user-chip">
+        <span class="dot"></span>
+        <span id="res-name-display">Loading...</span>
+      </div>
+      <button class="btn-logout" onclick="resellerLogout()">↩ Logout</button>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main id="res-main" style="display:none;">
+
+    <!-- Welcome banner -->
+    <div class="welcome-banner">
+      <div>
+        <div class="welcome-title">Welcome back, <span id="res-welcome-name">Reseller</span>! 👋</div>
+        <div class="welcome-sub">You have access to all premium panels at 50% off. Buy low, sell high. Grow your empire.</div>
+      </div>
+      <div class="discount-pill">🏷️ 50% OFF All Panels</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-val gold" id="stat-products">—</div>
+        <div class="stat-lbl">Products Available</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val green">50%</div>
+        <div class="stat-lbl">Your Discount</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val cyan">Active</div>
+        <div class="stat-lbl">Account Status</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-val purple" style="font-size:1.6rem;">₹999/mo</div>
+        <div class="stat-lbl">Current Plan</div>
+      </div>
+    </div>
+
+    <!-- Products -->
+    <div class="sec-header">
+      <div class="sec-title">🛒 <span>All Panels</span> at 50% Off</div>
+      <div style="font-size:.8rem;color:#94a3b8;font-weight:600;letter-spacing:0.5px;">Prices shown are YOUR discounted prices</div>
+    </div>
+    <div class="products-grid" id="res-products-grid">
+      <div class="empty"><div class="empty-icon">⏳</div>Loading products...</div>
+    </div>
+
+    <!-- How to order -->
+    <div class="info-box">
+      <h3>📋 HOW TO PLACE A RESELLER ORDER</h3>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-title">Pick a Product</div>
+          <div class="step-desc">Choose any product above and note your 50% discounted price.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-title">Make Payment</div>
+          <div class="step-desc">Pay via UPI or Binance using the details below.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-title">Send UTR on Discord</div>
+          <div class="step-desc">DM us on <a href="https://discord.gg/9k4RChsUfX" target="_blank">Discord</a> with your UTR and product name.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-title">Instant Delivery</div>
+          <div class="step-desc">We deliver the panel key/link to you within minutes.</div>
+        </div>
+      </div>
+
+      <div class="payment-row">
+        <div class="pay-method">
+          <div class="pay-label" style="color:#22d3ee;">💳 UPI (FamPay)</div>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=purianurag@fam&pn=GokuResellerOrder&cu=INR"
+            style="width:150px;height:150px;background:#fff;padding:8px;border-radius:12px;margin:.5rem auto;display:block;box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(34,211,238,0.3);" />
+          <div class="pay-id" style="color:#22d3ee;">purianurag@fam</div>
+        </div>
+        <div class="pay-method">
+          <div class="pay-label" style="color:#fcd535;">🟡 Binance Pay</div>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=513483565"
+            style="width:150px;height:150px;background:#fff;padding:8px;border-radius:12px;margin:.5rem auto;display:block;box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(252,213,53,0.3);" />
+          <div class="pay-id" style="color:#fcd535;">ID: 513483565</div>
+        </div>
+        <div class="pay-method" style="display:flex;flex-direction:column;justify-content:center;align-items:center;gap:1rem;">
+          <div style="font-size:3rem;filter:drop-shadow(0 0 10px rgba(88,101,242,0.5));">💬</div>
+          <div style="font-size:1rem;font-weight:700;color:#e2e8f0;">Need help?</div>
+          <div style="font-size:.85rem;color:#94a3b8;line-height:1.5;">Join our Discord for priority reseller support.</div>
+          <a href="https://discord.gg/9k4RChsUfX" target="_blank"
+            style="background:#5865f2;color:#fff;font-weight:800;font-size:.9rem;padding:.8rem 1.8rem;border-radius:12px;text-decoration:none;box-shadow:0 5px 20px rgba(88,101,242,0.4);transition:all 0.3s;margin-top:0.5rem;display:inline-block;"
+            onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 25px rgba(88,101,242,0.6)';"
+            onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 5px 20px rgba(88,101,242,0.4)';">
+            Open Discord
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Login Screen -->
+  <div id="login-screen">
+    <div class="login-box">
+      <div class="login-header">
+        <div class="login-icon">💼</div>
+        <div class="login-title">RESELLER PORTAL</div>
+        <div class="login-sub">Enter your reseller credentials to access the 50% discounted panels.</div>
+      </div>
+      
+      <form onsubmit="handleResLogin(event)" style="position:relative;z-index:1;">
+        <div style="margin-bottom:1.5rem;">
+          <label class="login-label">Username</label>
+          <input type="text" id="rl-user" class="login-input" placeholder="Enter reseller username" required />
+        </div>
+        <div style="margin-bottom:1.5rem;">
+          <label class="login-label">Password</label>
+          <input type="password" id="rl-pass" class="login-input" placeholder="Enter reseller password" required />
+        </div>
+        <button type="submit" class="login-btn">LOGIN TO DASHBOARD →</button>
+      </form>
+      <div id="rl-msg" style="text-align:center;margin-top:1.2rem;font-size:.85rem;min-height:1.2rem;font-weight:600;"></div>
+      
+      <div style="text-align:center;position:relative;z-index:1;">
+        <a href="index.html#reseller" class="back-link">← Not a reseller? Go back</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    const resellerRaw = sessionStorage.getItem('reseller_session');
+
+    if (!resellerRaw) {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.querySelector('header').style.display = 'none';
+    } else {
+      const res = JSON.parse(resellerRaw);
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('res-main').style.display = 'block';
+      document.getElementById('res-name-display').textContent = res.name;
+      document.getElementById('res-welcome-name').textContent = res.name;
+      loadResellerProducts();
+    }
+
+    async function handleResLogin(e) {
+      e.preventDefault();
+      const msgEl = document.getElementById('rl-msg');
+      const username = document.getElementById('rl-user').value.trim().toLowerCase();
+      const password = document.getElementById('rl-pass').value;
+
+      msgEl.style.color = '#94a3b8';
+      msgEl.textContent = '⏳ Verifying credentials...';
+
+      try {
+        const { data, error } = await _sb
+          .from('resellers')
+          .select('*')
+          .eq('username', username)
+          .eq('password', password)
+          .eq('is_active', true)
+          .single();
+
+        if (error || !data) {
+          msgEl.style.color = '#ef4444';
+          msgEl.textContent = '❌ Invalid username or password.';
+          return;
+        }
+
+        sessionStorage.setItem('reseller_session', JSON.stringify({ id: data.id, name: data.name, username: data.username }));
+        msgEl.style.color = '#4ade80';
+        msgEl.textContent = `✅ Welcome, ${data.name}! Loading dashboard...`;
+
+        setTimeout(() => window.location.reload(), 800);
+      } catch (err) {
+        msgEl.style.color = '#ef4444';
+        msgEl.textContent = '❌ An error occurred. Try again.';
+      }
+    }
+
+    async function loadResellerProducts() {
+      const { data: prods, error } = await _sb.from('products').select('*').order('created_at', { ascending: true });
+      const grid = document.getElementById('res-products-grid');
+
+      if (error || !prods || !prods.length) {
+        grid.innerHTML = '<div class="empty"><div class="empty-icon">📭</div>No products available right now. Check back soon!</div>';
+        return;
+      }
+
+      document.getElementById('stat-products').textContent = prods.length;
+
+      grid.innerHTML = prods.map(p => {
+        const plans = p.plans || {};
+        const planKeys = Object.keys(plans).filter(k => plans[k]?.inr);
+        const icon = p.name.includes('Diamond') ? '💠' : p.name.includes('Bundle') ? '⚡' : p.name.includes('Panel') ? '💎' : '🎯';
+
+        const plansHtml = planKeys.length
+          ? planKeys.map(k => {
+              const origInr = parseFloat(plans[k].inr);
+              const discInr = Math.ceil(origInr * 0.5);
+              const origUsd = parseFloat(plans[k].usd) || 0;
+              const discUsd = origUsd ? (origUsd * 0.5).toFixed(1) : null;
+              return `
+                <div class="plan-row">
+                  <div>
+                    <div class="plan-name">${k}</div>
+                    ${discUsd ? `<div class="price-usd">$${discUsd} <span style="text-decoration:line-through;color:#334155;">$${origUsd}</span></div>` : ''}
+                  </div>
+                  <div class="plan-prices">
+                    <span class="price-orig">₹${origInr}</span>
+                    <span class="price-disc">₹${discInr}</span>
+                    <span class="saving-tag">-50%</span>
+                  </div>
+                </div>`;
+            }).join('')
+          : '<div style="font-size:.8rem;color:#475569;text-align:center;padding:.5rem;">No plans configured yet.</div>';
+
+        return `
+          <div class="product-card">
+            <div class="card-badge">50% OFF</div>
+            <div class="card-icon">${icon}</div>
+            <div class="card-name">${p.name}</div>
+            <div class="card-desc">${p.description || 'Premium panel — instant delivery after payment.'}</div>
+            <div class="plans-list">${plansHtml}</div>
+          </div>`;
+      }).join('');
+    }
+
+    function resellerLogout() {
+      sessionStorage.removeItem('reseller_session');
+      window.location.reload();
+    }
+  </script>
+</body>
+</html>

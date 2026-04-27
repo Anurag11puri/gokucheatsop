@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Goku Cheats – Premium Free Fire mod menus, panels, paid push services and more. Join the #1 Free Fire cheat community." />
+  <title>Goku Cheats | #1 Free Fire Mods & Panels</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=5" />
+  <link rel="stylesheet" href="animations.css?v=5" />
+  <!-- Perf hints -->
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+  <link rel="dns-prefetch" href="https://kiffmcsmfnfmzuwmtjsi.supabase.co" />
+  <link rel="preconnect" href="https://kiffmcsmfnfmzuwmtjsi.supabase.co" crossorigin />
+  <!-- Supabase CDN — loaded synchronously to ensure auth.js works -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+  <div class="cursor-glow" id="cursor-glow"></div>
+
+  <!-- ── Floating particles canvas ─────────────────────────────────── -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- ── Navbar ─────────────────────────────────────────────────────── -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="logo">
+        <span class="logo-icon">⚡</span>
+        <span>GOKU<span class="logo-accent">CHEATS</span></span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#products" class="nav-link">Products</a></li>
+        <li><a href="#free-panels" class="nav-link">Free Panels</a></li>
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#reseller" class="nav-link" style="color:#fcd34d;">💼 Reseller</a></li>
+        <li><a href="https://discord.gg/9k4RChsUfX" target="_blank" class="nav-link">Discord</a></li>
+        <li><button class="nav-auth-btn nav-signin" id="nav-signin-btn" onclick="openAuth('signin')">Sign In</button>
+        </li>
+        <li><button class="nav-auth-btn nav-register" id="nav-register-btn"
+            onclick="openAuth('register')">Register</button></li>
+      </ul>
+      <div id="nav-user-area" style="display:none"></div>
+    </div>
+  </nav>
+
+  <!-- ── Hero ───────────────────────────────────────────────────────── -->
+  <section class="hero" id="hero">
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+    <div class="hero-orb orb-3"></div>
+    <!-- 3D floating elements -->
+    <div class="float-el el-ring purple" style="--sz:80px;--dur:12s;--ty:-25px;--r0:0deg;--r1:30deg;top:12%;left:5%;"
+      aria-hidden="true"></div>
+    <div class="float-el el-ring cyan"
+      style="--sz:50px;--dur:9s;--ty:-18px;--r0:10deg;--r1:-20deg;top:70%;left:8%;animation-delay:-3s"
+      aria-hidden="true"></div>
+    <div class="float-el el-diamond" style="--sz:22px;--dur:7s;top:20%;right:12%;animation-delay:-2s"
+      aria-hidden="true"></div>
+    <div class="float-el el-diamond" style="--sz:14px;--dur:9s;top:65%;right:6%;animation-delay:-5s" aria-hidden="true">
+    </div>
+    <div class="float-el el-hex" style="--sz:36px;--dur:11s;top:80%;left:20%;animation-delay:-4s" aria-hidden="true">
+    </div>
+    <div class="float-el el-dot"
+      style="--sz:10px;--col:rgba(34,211,238,.6);--dur:2.5s;top:35%;right:18%;animation-delay:-1s" aria-hidden="true">
+    </div>
+    <div class="float-el el-dot"
+      style="--sz:7px;--col:rgba(245,158,11,.7);--dur:3.5s;top:55%;left:14%;animation-delay:-2s" aria-hidden="true">
+    </div>
+    <div class="hero-content">
+      <div class="badge-pill" id="hero-badge">🔥 Free Fire's #1 Mod Shop</div>
+      <h1 class="hero-title">
+        DOMINATE<br />
+        <span class="gradient-text">EVERY MATCH</span>
+      </h1>
+      <p class="hero-sub">Premium mod menus · Instant panels · Push services · Exclusive tools — all under one roof.</p>
+      <div class="hero-btns">
+        <a href="#products" class="btn-primary" id="hero-shop-btn">
+          <span>Shop Now</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7" />
+          </svg>
+        </a>
+        <a href="#free-panels" class="btn-glass" id="hero-free-btn">Grab Free Panel</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><span class="stat-num" data-target="12000">0</span><span class="stat-label">Happy
+            Users</span></div>
+        <div class="stat-div"></div>
+        <div class="stat-item"><span class="stat-num" data-target="99">0</span><span class="stat-label">Uptime %</span>
+        </div>
+        <div class="stat-div"></div>
+        <div class="stat-item"><span class="stat-num" data-target="24">0</span><span class="stat-label">Support
+            Hrs</span></div>
+      </div>
+    </div>
+    <div class="hero-3d-card" aria-hidden="true">
+      <div class="card-inner">
+        <div class="card-glow"></div>
+        <div class="card-content">
+          <div class="card-tag">⚡ GOKU CHEATS</div>
+          <div class="card-title">ESP + AIMBOT</div>
+          <div class="card-sub">Season Active · Undetected · Auto-Updated</div>
+          <div class="card-features">
+            <div class="cf-row"><span class="cf-dot cyan"></span><span>Internal</span><span
+                class="cf-status on">ON</span></div>
+            <div class="cf-row"><span class="cf-dot purple"></span><span>Silent Aim</span><span
+                class="cf-status on">ON</span></div>
+            <div class="cf-row"><span class="cf-dot gold"></span><span>UID Bypass</span><span
+                class="cf-status on">ON</span></div>
+            <div class="cf-row"><span class="cf-dot cyan"></span><span>Silent Cover</span><span
+                class="cf-status on">ON</span></div>
+            <div class="cf-row"><span class="cf-dot purple"></span><span>Aimkill Cover</span><span
+                class="cf-status on">ON</span></div>
+            <div class="cf-row"><span class="cf-dot gold"></span><span>Aimbot</span><span class="cf-status on">ON</span>
+            </div>
+          </div>
+          <div class="card-scanline"></div>
+          <div class="card-status"><span class="dot-green"></span>ALL SYSTEMS ONLINE</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Marquee strip ──────────────────────────────────────────────── -->
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track">
+      <span>⚡ MOD MENU</span><span>🎯 AIMBOT</span><span>👁 ESP HACK</span><span>🚀 PUSH SERVICE</span><span>🔓 FREE
+        PANELS</span><span>💎 PREMIUM ACCESS</span><span>🛡 ANTI-BAN</span><span>⚡ MOD MENU</span><span>🎯
+        AIMBOT</span><span>👁 ESP HACK</span><span>🚀 PUSH SERVICE</span><span>🔓 FREE PANELS</span><span>💎 PREMIUM
+        ACCESS</span><span>🛡 ANTI-BAN</span>
+    </div>
+  </div>
+
+  <!-- ── Products ───────────────────────────────────────────────────── -->
+  <section class="section" id="products" style="position:relative;overflow:hidden;">
+    <div class="section-inner" style="position:relative;">
+      <div aria-hidden="true">
+        <div class="float-el el-ring gold" style="--sz:55px;--dur:14s;--ty:-18px;--r0:0deg;--r1:45deg;position:absolute;top:0;right:-2rem;opacity:.2"></div>
+        <div class="float-el el-hex" style="--sz:24px;--dur:10s;position:absolute;bottom:2rem;left:-1rem;animation-delay:-6s;opacity:.25"></div>
+        <div class="float-el el-dot" style="--sz:8px;--col:rgba(168,85,247,.5);--dur:4s;position:absolute;top:50%;right:2rem;animation-delay:-3s"></div>
+      </div>
+      <div class="section-tag">💰 Our Store</div>
+      <h2 class="section-title">Premium <span class="gradient-text">Products</span></h2>
+      <p class="section-sub">Hand-crafted cheats and tools — updated every season. Undetected & instant delivery.</p>
+
+      <div class="products-grid" id="products-grid">
+        <!-- Products will be loaded dynamically from Supabase here -->
+        <p style="text-align:center; color:#94a3b8; width:100%;">Loading premium products...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Free Panels ─────────────────────────────────────────────────── -->
+  <section class="section section-dark" id="free-panels" style="position:relative;overflow:hidden;">
+    <div class="section-inner" style="position:relative;">
+      <div aria-hidden="true">
+        <div class="float-el el-ring cyan" style="--sz:60px;--dur:11s;--ty:-18px;--r0:-5deg;--r1:25deg;position:absolute;top:0;left:-2rem;opacity:.18"></div>
+        <div class="float-el el-diamond" style="--sz:18px;--dur:8s;position:absolute;bottom:2rem;right:-1rem;animation-delay:-3s;opacity:.4"></div>
+        <div class="float-el el-dot" style="--sz:10px;--col:rgba(34,211,238,.5);--dur:3s;position:absolute;top:40%;right:2rem;animation-delay:-1s"></div>
+      </div>
+      <div class="section-tag">🎁 Free Zone</div>
+      <h2 class="section-title">Free <span class="gradient-text">Panels</span></h2>
+      <p class="section-sub">Grab today's free panels before slots run out. Updated daily. Join Discord to never miss
+        one.</p>
+
+      <div class="free-panels-grid" id="free-panels-grid">
+        <!-- Free Panels will be loaded dynamically here -->
+        <p style="text-align:center; color:#94a3b8; width:100%;">Loading free panels...</p>
+      </div>
+
+      <div class="free-panel-note">
+        <span>🔔 New free panels drop every day at <strong>9 PM IST</strong> — </span>
+        <a href="https://discord.gg/9k4RChsUfX" target="_blank" class="link-highlight" id="discord-notify-link">Join Discord to
+          get notified</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── Services ───────────────────────────────────────────────────── -->
+  <section class="section" id="services">
+    <div class="section-inner">
+      <div class="section-tag">🛠 What We Do</div>
+      <h2 class="section-title">Our <span class="gradient-text">Services</span></h2>
+      <div class="services-grid">
+        <div class="service-card" id="svc-delivery">
+          <div class="svc-icon">⚡</div>
+          <h3>Instant Delivery</h3>
+          <p>All products are delivered within minutes after payment — automated system, no waiting.</p>
+        </div>
+        <div class="service-card" id="svc-support">
+          <div class="svc-icon">🎧</div>
+          <h3>24/7 Support</h3>
+          <p>Our team is always active on Discord. Open a ticket anytime — we respond in minutes.</p>
+        </div>
+        <div class="service-card" id="svc-updates">
+          <div class="svc-icon">🔄</div>
+          <h3>Regular Updates</h3>
+          <p>All mods are updated after each Free Fire patch. You get free updates for the duration of your plan.</p>
+        </div>
+        <div class="service-card" id="svc-antidetect">
+          <div class="svc-icon">🛡</div>
+          <h3>Anti-Detection</h3>
+          <p>Our tools use advanced obfuscation to stay ahead of Garena's detection — updated daily.</p>
+        </div>
+        <div class="service-card" id="svc-custom">
+          <div class="svc-icon">🧩</div>
+          <h3>Custom Requests</h3>
+          <p>Need a specific feature? Contact us on Discord — we take custom orders for special modules.</p>
+        </div>
+        <div class="service-card" id="svc-resell">
+          <div class="svc-icon">💼</div>
+          <h3>Reseller Program</h3>
+          <p>Become a reseller and earn commissions. Exclusive dashboard provided. DM us on Discord.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why Us ──────────────────────────────────────────────────────── -->
+  <section class="section section-dark" id="why-us" style="position:relative;overflow:hidden;">
+    <div aria-hidden="true" style="position:absolute;">
+      <div class="float-el el-ring purple"
+        style="--sz:90px;--dur:16s;--ty:-22px;--r0:0deg;--r1:50deg;bottom:5%;right:2%;opacity:.18"></div>
+      <div class="float-el el-hex" style="--sz:32px;--dur:9s;top:15%;left:1%;animation-delay:-4s;opacity:.3"></div>
+      <div class="float-el el-dot"
+        style="--sz:8px;--col:rgba(245,158,11,.6);--dur:2.8s;top:60%;right:3%;animation-delay:-2s"></div>
+    </div>
+    <div class="section-inner">
+      <div class="section-tag">🌟 Why Choose Us</div>
+      <h2 class="section-title">The Goku <span class="gradient-text">Advantage</span></h2>
+      <div class="why-grid">
+        <div class="why-card" id="why-trusted">
+          <div class="why-num">01</div>
+          <h3>Trusted by 12,000+ Users</h3>
+          <p>The most popular Free Fire cheat community — verified reviews on Discord.</p>
+        </div>
+        <div class="why-card" id="why-safe">
+          <div class="why-num">02</div>
+          <h3>99% Undetected Rate</h3>
+          <p>Our bypass tech keeps you safe every season — we've never had a mass ban wave.</p>
+        </div>
+        <div class="why-card" id="why-cheap">
+          <div class="why-num">03</div>
+          <h3>Lowest Prices</h3>
+          <p>We believe premium shouldn't cost a fortune — best prices guaranteed or we match it.</p>
+        </div>
+        <div class="why-card" id="why-community">
+          <div class="why-num">04</div>
+          <h3>Active Community</h3>
+          <p>Join thousands of players sharing tips, free drops, and hype on our Discord server.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Reseller Section ─────────────────────────────────────────────── -->
+  <section class="section section-dark" id="reseller" style="position:relative;overflow:hidden;">
+    <div aria-hidden="true" style="position:absolute;">
+      <div class="float-el el-ring" style="--sz:80px;--dur:14s;--ty:-20px;--r0:0deg;--r1:40deg;top:10%;right:3%;opacity:.15;border-color:rgba(252,211,77,.4);"></div>
+      <div class="float-el el-diamond" style="--sz:22px;--dur:8s;bottom:15%;left:5%;animation-delay:-3s;opacity:.4;"></div>
+    </div>
+    <div class="section-inner">
+      <div class="section-tag" style="color:#fcd34d;background:rgba(252,211,77,.1);border-color:rgba(252,211,77,.3);">💼 Business</div>
+      <h2 class="section-title">Become a <span style="background:linear-gradient(90deg,#fcd34d,#f97316);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Reseller</span></h2>
+      <p class="section-sub">Get access to ALL premium panels at 50% off and build your own business. Sell to your network and keep the profits.</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,340px));justify-content:center;gap:2rem;margin-bottom:2.5rem;">
+        <!-- Benefits Card -->
+        <div class="product-card" style="border-color:rgba(252,211,77,.3);background:rgba(252,211,77,.04);">
+          <div style="font-size:2rem;margin-bottom:1rem;">🏆</div>
+          <h3 style="font-family:var(--font-head);color:#fcd34d;font-size:1.1rem;margin-bottom:1rem;">Reseller Benefits</h3>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.7rem;font-size:.85rem;color:#cbd5e1;">
+            <li>✅ <strong>50% Discount</strong> on ALL premium panels</li>
+            <li>✅ Access to <strong>exclusive reseller dashboard</strong></li>
+            <li>✅ Dedicated reseller login credentials</li>
+            <li>✅ Priority support via Discord</li>
+            <li>✅ Early access to new panels & updates</li>
+            <li>✅ Bulk purchase options available</li>
+          </ul>
+          <div style="margin-top:1.5rem;padding:1rem;background:rgba(252,211,77,.08);border-radius:10px;border:1px solid rgba(252,211,77,.2);">
+            <div style="font-size:.75rem;color:#94a3b8;margin-bottom:.3rem;">Monthly Subscription</div>
+            <div style="font-size:1.8rem;font-weight:900;color:#fcd34d;font-family:var(--font-head);">₹999<span style="font-size:.9rem;color:#94a3b8;font-weight:400;"> / mo</span></div>
+            <div style="font-size:.85rem;color:#64748b;">$12 / month (USD)</div>
+          </div>
+          <button onclick="openResellerPurchaseModal()" class="btn-buy" style="margin-top:1.2rem;width:100%;background:linear-gradient(90deg,rgba(252,211,77,.2),rgba(249,115,22,.2));border-color:rgba(252,211,77,.5);color:#fcd34d;font-weight:700;font-size:.9rem;">Become a Reseller →</button>
+        </div>
+
+        <!-- Login Card -->
+        <div class="product-card" style="border-color:rgba(34,211,238,.3);background:rgba(34,211,238,.04);">
+          <div style="font-size:2rem;margin-bottom:1rem;">🔐</div>
+          <h3 style="font-family:var(--font-head);color:#22d3ee;font-size:1.1rem;margin-bottom:1rem;">Already a Reseller?</h3>
+          <p style="font-size:.85rem;color:#94a3b8;line-height:1.6;margin-bottom:1.5rem;">Log in to your reseller dashboard to access all discounted panels, manage your customers, and track your earnings.</p>
+          <ul style="list-style:none;padding:0;margin:0 0 1.5rem;display:flex;flex-direction:column;gap:.6rem;font-size:.85rem;color:#cbd5e1;">
+            <li>📦 View all panels at 50% off</li>
+            <li>📊 Dashboard with order history</li>
+            <li>💬 Reseller-only support channel</li>
+          </ul>
+          <button onclick="openResellerLoginModal()" class="btn-buy" style="width:100%;background:rgba(34,211,238,.1);border-color:rgba(34,211,238,.5);color:#22d3ee;font-weight:700;font-size:.9rem;">🔐 Reseller Login</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Discord CTA ─────────────────────────────────────────────────── -->
+  <section class="section discord-cta" id="discord-cta-section">
+    <div class="cta-orb cta-orb-1"></div>
+    <div class="cta-orb cta-orb-2"></div>
+    <div class="section-inner cta-inner">
+      <div class="discord-icon" aria-hidden="true">
+        <svg width="56" height="56" viewBox="0 0 71 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M60.1 4.9A58.5 58.5 0 0 0 45.4.7a40.3 40.3 0 0 0-1.8 3.7 54.1 54.1 0 0 0-16.2 0A38.6 38.6 0 0 0 25.6.7 58.4 58.4 0 0 0 10.9 4.9C1.6 18.7-1 32.2.3 45.5a59 59 0 0 0 18 9.1 44.7 44.7 0 0 0 3.9-6.3 38.3 38.3 0 0 1-6.1-2.9l1.5-1.1a42 42 0 0 0 35.9 0l1.5 1.1a38.5 38.5 0 0 1-6.1 2.9 44.5 44.5 0 0 0 3.9 6.3 58.9 58.9 0 0 0 18-9.1C72.5 30 69.2 16.6 60.1 4.9ZM23.7 37.3c-3.5 0-6.4-3.2-6.4-7.1s2.8-7.1 6.4-7.1c3.5 0 6.4 3.2 6.4 7.1s-2.9 7.1-6.4 7.1Zm23.5 0c-3.5 0-6.4-3.2-6.4-7.1s2.8-7.1 6.4-7.1c3.5 0 6.4 3.2 6.4 7.1s-2.9 7.1-6.4 7.1Z"
+            fill="currentColor" />
+        </svg>
+      </div>
+      <h2 class="cta-title">Join <span class="gradient-text">Goku Cheats</span> Discord</h2>
+      <p class="cta-sub">Get free drops, announcements, VIP giveaways and direct support — all in one server.</p>
+      <a href="https://discord.gg/9k4RChsUfX" target="_blank" class="btn-discord" id="discord-join-btn">
+        Join the Server
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ── Footer ──────────────────────────────────────────────────────── -->
+  <footer class="footer" id="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span class="logo-icon">⚡</span>
+        GOKU<span class="logo-accent">CHEATS</span>
+      </div>
+      <p class="footer-tagline">Free Fire's #1 Mod & Panel Community</p>
+      <div class="footer-links">
+        <a href="#products" class="footer-link">Products</a>
+        <a href="#free-panels" class="footer-link">Free Panels</a>
+        <a href="#services" class="footer-link">Services</a>
+        <a href="https://discord.gg/9k4RChsUfX" target="_blank" class="footer-link">Discord</a>
+        <button class="footer-link footer-auth-link" onclick="openAuth('register')">Register</button>
+        <button class="footer-link footer-auth-link" onclick="openAuth('signin')">Sign In</button>
+      </div>
+      <p class="footer-disclaimer">⚠️ For educational and entertainment purposes only. Use at your own risk. We are not
+        affiliated with Garena or Free Fire.</p>
+      <p class="footer-copy">© 2025 GokuCheats. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- ── Grab modal ──────────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="grab-modal" onclick="closeModal('grab-modal')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-icon">✅</div>
+      <h3 class="modal-title">Panel Grabbed!</h3>
+      <p class="modal-text">Join our Discord server and grab your FREE panel in FREE panel Section.</p>
+      <a href="https://discord.gg/9k4RChsUfX" target="_blank" class="btn-primary" id="modal-discord-btn"
+        onclick="closeModal('grab-modal')">Open Discord →</a>
+      <button class="modal-close" onclick="closeModal('grab-modal')">✕</button>
+    </div>
+  </div>
+
+  <!-- ── Auth modal ───────────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="auth-modal" onclick="closeModal('auth-modal')">
+    <div class="modal-box auth-modal-box" onclick="event.stopPropagation()">
+      <div class="auth-inner-bg"></div>
+      <div class="auth-scanlines"></div>
+      <button class="modal-close" onclick="closeModal('auth-modal')">✕</button>
+
+      <div class="auth-logo">⚡ GOKU<span class="logo-accent">CHEATS</span></div>
+
+      <!-- Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-signin" onclick="switchTab('signin')">Sign In</button>
+        <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Register</button>
+      </div>
+
+      <!-- Sign In form -->
+      <form class="auth-form" id="form-signin" onsubmit="handleAuth(event,'signin')">
+        <div class="auth-field">
+          <label>Username or Email</label>
+          <input type="text" id="si-user" placeholder="Enter username or email" required autocomplete="username" />
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="si-pass" placeholder="Enter password" required autocomplete="current-password" />
+            <button type="button" class="pw-toggle" onclick="togglePw('si-pass',this)">👁</button>
+          </div>
+        </div>
+        <div class="auth-row">
+          <label class="auth-check"><input type="checkbox" /> Remember me</label>
+          <a href="#" class="auth-link">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn-auth-submit" id="signin-submit-btn">Sign In →</button>
+        <p class="auth-switch">Don't have an account? <button type="button" class="auth-link"
+            onclick="switchTab('register')">Register free</button></p>
+      </form>
+
+      <!-- Register form -->
+      <form class="auth-form hidden" id="form-register" onsubmit="handleAuth(event,'register')">
+        <div class="auth-field">
+          <label>Username</label>
+          <input type="text" id="reg-user" placeholder="Choose a username" required autocomplete="username" />
+        </div>
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="reg-email" placeholder="your@email.com" required autocomplete="email" />
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="reg-pass" placeholder="Min 8 characters" required autocomplete="new-password" />
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-pass',this)">👁</button>
+          </div>
+        </div>
+        <div class="auth-field">
+          <label>Confirm Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="reg-pass2" placeholder="Repeat password" required autocomplete="new-password" />
+            <button type="button" class="pw-toggle" onclick="togglePw('reg-pass2',this)">👁</button>
+          </div>
+        </div>
+        <div class="auth-row">
+          <label class="auth-check"><input type="checkbox" required /> I agree to the <a href="#"
+              class="auth-link">Terms</a></label>
+        </div>
+        <button type="submit" class="btn-auth-submit" id="register-submit-btn">Create Account →</button>
+        <p class="auth-switch">Already have an account? <button type="button" class="auth-link"
+            onclick="switchTab('signin')">Sign in</button></p>
+      </form>
+
+      <div class="auth-msg" id="auth-msg"></div>
+    </div>
+  </div>
+
+  <!-- ── Global Announcement Modal ───────────────────────────── -->
+  <div class="modal-overlay" id="announcement-modal" onclick="closeModal('announcement-modal')">
+    <div class="modal-box auth-modal-box" onclick="event.stopPropagation()"
+      style="text-align:center; max-width:400px; padding:2.5rem 2rem;">
+      <div class="auth-inner-bg"></div>
+      <div class="auth-scanlines"></div>
+      <button class="modal-close" onclick="closeModal('announcement-modal')">✕</button>
+
+      <div class="auth-logo" style="margin-bottom:1rem; font-size:1.8rem;">📢 <span class="logo-accent">UPDATE</span>
+      </div>
+      <p id="announcement-text"
+        style="color:#e2e8f0; font-size:1.05rem; line-height:1.5; margin-bottom:1.5rem; position:relative; z-index:1;">
+      </p>
+      <button class="btn-auth-submit" onclick="closeModal('announcement-modal')" style="width:100%; margin:0;">Got
+        it!</button>
+    </div>
+  </div>
+
+  <!-- ── Settings Modal (OTP / Username) ────────────────────────────── -->
+  <div class="modal-overlay" id="settings-modal" onclick="closeModal('settings-modal')">
+    <div class="modal-box auth-modal-box" onclick="event.stopPropagation()">
+      <div class="auth-inner-bg"></div>
+      <div class="auth-scanlines"></div>
+      <button class="modal-close" onclick="closeModal('settings-modal')">✕</button>
+
+      <div class="auth-logo" style="display:flex; align-items:center; justify-content:center; gap:8px;">
+        <span style="font-size:1.5rem;">⚡</span>
+        <span>ACCOUNT<span class="logo-accent">SETTINGS</span></span>
+      </div>
+
+      <div style="text-align:center; margin-bottom: 1.2rem; position:relative; z-index:1;">
+        <div style="position:relative; width:85px; height:85px; margin:0 auto 0.8rem;">
+          <div style="position:absolute; inset:-4px; background:linear-gradient(135deg, #a855f7, #22d3ee); border-radius:50%; opacity:0.4; filter:blur(6px); animation: pulse 2s infinite;"></div>
+          <img id="settings-avatar-preview" src="https://ui-avatars.com/api/?name=User&background=0D1117&color=fff"
+            style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:2px solid #1a1f2e; position:relative; z-index:1; box-shadow:0 8px 20px rgba(0,0,0,0.5);" />
+        </div>
+        <div style="text-align:center;">
+          <strong id="settings-current-user" style="color:#fff; font-size:1.1rem; display:block; letter-spacing:0.5px;">...</strong>
+          <span id="settings-email-display" style="font-size:0.75rem; color:#94a3b8; opacity:0.7; display:block; margin-top:-2px;"></span>
+        </div>
+      </div>
+
+      <div class="auth-tabs" style="padding: 0.25rem;">
+        <button class="auth-tab active" style="font-size: 0.75rem; padding: 0.5rem;" id="stab-profile"
+          onclick="showSettingsTab('profile')">Profile</button>
+        <button class="auth-tab" style="font-size: 0.75rem; padding: 0.5rem;" id="stab-email"
+          onclick="showSettingsTab('email')">Email</button>
+        <button class="auth-tab" style="font-size: 0.75rem; padding: 0.5rem;" id="stab-security"
+          onclick="showSettingsTab('security')">Security</button>
+        <button class="auth-tab" style="font-size: 0.75rem; padding: 0.5rem;" id="stab-purchases"
+          onclick="showSettingsTab('purchases')">My Products</button>
+      </div>
+
+      <!-- Purchases / Dashboard -->
+      <div class="auth-form hidden" id="sform-purchases" style="max-height: 300px; overflow-y: auto;">
+        <p style="font-size:0.8rem; color:#a78bfa; text-align:center; font-weight:bold;">Your Approved Products & Keys</p>
+        <div id="user-purchases-list" style="display:flex; flex-direction:column; gap:10px;">
+          <p style="text-align:center; color:#94a3b8; font-size:0.85rem;">Loading products...</p>
+        </div>
+      </div>
+
+      <!-- Profile Form (Username + Avatar) -->
+      <form class="auth-form" id="sform-profile" onsubmit="handleProfileChange(event)">
+        <div class="auth-field">
+          <label>Upload Avatar Image</label>
+          <input type="file" id="avatar-upload" accept="image/*"
+            style="font-size:0.8rem; padding:0.5rem; background:rgba(168,85,247,.05);" />
+        </div>
+        <div style="text-align:center; font-size:0.7rem; color:#64748b; font-weight:bold;">OR USE URL</div>
+        <div class="auth-field">
+          <label>Avatar Image URL</label>
+          <input type="url" id="new-avatar-url" placeholder="https://example.com/image.png" />
+        </div>
+        <div class="auth-field">
+          <label>Username</label>
+          <input type="text" id="new-username" placeholder="Enter new username" required minlength="3" />
+        </div>
+        <button type="submit" class="btn-auth-submit" id="save-profile-btn">Save Profile</button>
+      </form>
+
+      <!-- Email Form -->
+      <form class="auth-form hidden" id="sform-email" onsubmit="handleEmailChange(event)">
+        <div class="auth-field">
+          <label>New Email Address</label>
+          <input type="email" id="new-email" placeholder="new@email.com" required />
+        </div>
+        <p style="font-size:0.75rem; color:#94a3b8; text-align:center;">Note: Changing your email will send confirmation
+          links to both your old and new email addresses to verify the change.</p>
+        <button type="submit" class="btn-auth-submit" id="save-email-btn">Update Email</button>
+      </form>
+
+      <!-- Change Password Form with OTP -->
+      <form class="auth-form hidden" id="sform-security" onsubmit="handlePasswordChange(event)">
+        <p style="font-size:0.8rem; color:#a78bfa; text-align:center; font-weight:bold;">2-Step Verification Password
+          Change</p>
+        <div class="auth-field" id="otp-section" style="display:none;">
+          <label>Email OTP Code</label>
+          <input type="text" id="pw-otp" placeholder="Enter 6-digit OTP from email" />
+        </div>
+        <div class="auth-field">
+          <label>New Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="new-password" placeholder="Min 8 characters" required minlength="8" />
+            <button type="button" class="pw-toggle" onclick="togglePw('new-password',this)">👁</button>
+          </div>
+        </div>
+        <div class="auth-field">
+          <label>Confirm Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="confirm-password" placeholder="Repeat new password" required />
+            <button type="button" class="pw-toggle" onclick="togglePw('confirm-password',this)">👁</button>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:0.5rem; margin-top:0.5rem;">
+          <button type="button" class="btn-glass" id="send-otp-btn" style="flex:1; padding:0.8rem;"
+            onclick="sendPasswordOtp()">Send OTP</button>
+          <button type="submit" class="btn-auth-submit" id="change-pw-btn" style="flex:1; margin-top:0;">Change
+            Password</button>
+        </div>
+      </form>
+
+      <div class="auth-msg" id="settings-msg"></div>
+    </div>
+  </div>
+
+  <!-- ── Plan Selection Modal ──────────────────────────────────────── -->
+  <div class="modal-overlay" id="plan-modal" onclick="closeModal('plan-modal')">
+    <div class="modal-box auth-modal-box" onclick="event.stopPropagation()" style="max-width:400px; text-align:center; border:1px solid rgba(168,85,247,0.3); box-shadow:0 0 30px rgba(168,85,247,0.2);">
+      <div class="auth-inner-bg"></div>
+      <div class="auth-scanlines"></div>
+      <button class="modal-close" onclick="closeModal('plan-modal')" style="z-index:10; background:rgba(255,0,0,0.1); color:#ef4444; border:1px solid rgba(239,68,68,0.3);">✕</button>
+
+      <div class="auth-logo" style="margin-bottom:0.5rem; font-size:1.6rem; position:relative; z-index:1;">
+        <span style="font-size:1.8rem; vertical-align:middle;">⏳</span> 
+        <span class="logo-accent" style="background: linear-gradient(135deg, #a855f7, #22d3ee); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight:900; letter-spacing:1px; vertical-align:middle;">CHOOSE PLAN</span>
+      </div>
+      
+      <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:1.5rem; position:relative; z-index:1;">Select a subscription duration for <strong id="plan-product-name" style="color:#22d3ee;">Product</strong></p>
+
+      <div id="plan-options-container" style="display:flex; flex-direction:column; gap:10px; position:relative; z-index:1;">
+        <!-- Plans dynamically injected here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Payment Modal (FamPay QR) ────────────────────────────── -->
+  <style>
+    @keyframes scanline { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+    .pay-btn-glow:hover { box-shadow: 0 0 25px rgba(34, 211, 238, 0.6), 0 0 45px rgba(168, 85, 247, 0.4); }
+  </style>
+  <div class="modal-overlay" id="payment-modal" onclick="closeModal('payment-modal')">
+    <div class="modal-box auth-modal-box" onclick="event.stopPropagation()" style="max-width:420px; overflow:hidden; border: 1px solid rgba(34, 211, 238, 0.3); box-shadow: 0 0 40px rgba(168, 85, 247, 0.2);">
+      <div class="auth-inner-bg"></div>
+      <div class="auth-scanlines"></div>
+      
+      <!-- Floating orbs -->
+      <div style="position:absolute; top:-50px; left:-50px; width:150px; height:150px; background:radial-gradient(circle, rgba(168,85,247,0.3) 0%, transparent 70%); border-radius:50%; filter:blur(20px); z-index:0; pointer-events:none;"></div>
+      <div style="position:absolute; bottom:-50px; right:-50px; width:150px; height:150px; background:radial-gradient(circle, rgba(34,211,238,0.3) 0%, transparent 70%); border-radius:50%; filter:blur(20px); z-index:0; pointer-events:none;"></div>
+
+      <button class="modal-close" onclick="closeModal('payment-modal')" style="z-index:10; background:rgba(255,0,0,0.1); color:#ef4444; border:1px solid rgba(239,68,68,0.3);">✕</button>
+
+      <div class="auth-logo" style="margin-bottom:0.5rem; position:relative; z-index:1; text-align:center; white-space:nowrap;">
+        <span style="font-size:1.6rem; vertical-align:middle;">💳</span> 
+        <span class="logo-accent" style="background: linear-gradient(135deg, #22d3ee, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight:900; font-size:1.4rem; letter-spacing:1px; vertical-align:middle; margin-left:4px;">SECURE CHECKOUT</span>
+      </div>
+      
+      <div style="text-align:center; margin-bottom:1.5rem; position:relative; z-index:1; padding:15px; background:rgba(0,0,0,0.3); border-radius:12px; border:1px solid rgba(255,255,255,0.05);">
+        <h3 id="pay-product-name" style="color:#e2e8f0; font-family:var(--font-head); margin-bottom:0.4rem; font-size:1.2rem; letter-spacing:1px; text-transform:uppercase;">Product Name</h3>
+        <p style="color:#94a3b8; font-size:0.85rem; margin-bottom:0; text-transform:uppercase; letter-spacing:2px;">Amount to Pay</p>
+        <p style="color:#fff; font-size:1.8rem; font-weight:900; margin:0; text-shadow:0 0 15px rgba(34,211,238,0.5);"><span id="pay-currency-symbol" style="color:#22d3ee; margin-right:4px;">₹</span><span id="pay-product-price">0</span></p>
+      </div>
+
+      <!-- Payment Method Toggle -->
+      <div style="display:flex; justify-content:center; gap:10px; margin-bottom:1rem; position:relative; z-index:1;">
+        <button type="button" id="btn-pay-upi" onclick="switchPaymentMethod('upi')" style="flex:1; background:linear-gradient(90deg, #22d3ee, #0ea5e9); color:#fff; border:none; padding:10px; border-radius:8px; font-weight:bold; font-size:0.85rem; cursor:pointer; box-shadow:0 0 15px rgba(34,211,238,0.4); transition:all 0.3s;">💳 UPI / FamPay</button>
+        <button type="button" id="btn-pay-binance" onclick="switchPaymentMethod('binance')" style="flex:1; background:rgba(255,255,255,0.05); color:#94a3b8; border:1px solid rgba(255,255,255,0.1); padding:10px; border-radius:8px; font-weight:bold; font-size:0.85rem; cursor:pointer; transition:all 0.3s;">🟡 Binance Pay</button>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.02); padding:1.2rem; border-radius:16px; margin-bottom:1.5rem; text-align:center; position:relative; z-index:1; border:1px solid rgba(168,85,247,0.3); box-shadow:inset 0 0 20px rgba(168,85,247,0.05);">
+        
+        <!-- UPI METHOD -->
+        <div id="pay-method-upi" style="display:block; animation:fadeIn 0.3s ease;">
+          <div style="display:inline-block; padding:4px 12px; background:rgba(34,211,238,0.1); border-radius:20px; border:1px solid rgba(34,211,238,0.3); margin-bottom:1rem;">
+            <p style="font-size:0.75rem; color:#22d3ee; margin:0; font-weight:600; text-transform:uppercase; letter-spacing:1px; animation:blink 2s infinite;">Scan to Pay via FamPay</p>
+          </div>
+
+          <div style="width:180px; height:180px; background:#fff; margin:0 auto; border-radius:12px; padding:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(168,85,247,0.4); position:relative; overflow:hidden;">
+            <div style="position:absolute; top:0; left:0; right:0; height:3px; background:#22d3ee; box-shadow:0 0 15px #22d3ee, 0 0 30px #22d3ee; animation: scanline 2s linear infinite; z-index:2;"></div>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi://pay?pa=purianurag@fam&pn=GokuCheats&cu=INR" alt="FamPay QR Code" style="max-width:100%; height:auto; mix-blend-mode:multiply; z-index:1; position:relative;" id="fampay-qr-img" />
+          </div>
+          
+          <div style="margin-top:1rem; background:rgba(0,0,0,0.4); border-radius:8px; padding:8px 12px; display:flex; align-items:center; justify-content:space-between; border:1px solid rgba(255,255,255,0.05);">
+            <span style="font-size:0.75rem; color:#94a3b8; text-transform:uppercase;">UPI ID</span>
+            <strong style="color:#a855f7; font-size:0.9rem; letter-spacing:0.5px;">purianurag@fam</strong>
+          </div>
+        </div>
+
+        <!-- BINANCE METHOD -->
+        <div id="pay-method-binance" style="display:none; animation:fadeIn 0.3s ease;">
+          <div style="display:inline-block; padding:4px 12px; background:rgba(252, 213, 53, 0.1); border-radius:20px; border:1px solid rgba(252, 213, 53, 0.3); margin-bottom:1rem;">
+            <p style="font-size:0.75rem; color:#fcd535; margin:0; font-weight:600; text-transform:uppercase; letter-spacing:1px; animation:blink 2s infinite;">Scan via Binance App</p>
+          </div>
+
+          <div style="width:180px; height:180px; background:#fff; margin:0 auto; border-radius:12px; padding:10px; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(252, 213, 53, 0.4); position:relative; overflow:hidden;">
+            <div style="position:absolute; top:0; left:0; right:0; height:3px; background:#fcd535; box-shadow:0 0 15px #fcd535, 0 0 30px #fcd535; animation: scanline 2s linear infinite; z-index:2;"></div>
+            <!-- Update the data= parameter below with your actual Binance Pay ID / Address later -->
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=513483565" alt="Binance QR Code" style="max-width:100%; height:auto; mix-blend-mode:multiply; z-index:1; position:relative;" id="binance-qr-img" />
+          </div>
+          
+          <div style="margin-top:1rem; background:rgba(0,0,0,0.4); border-radius:8px; padding:8px 12px; display:flex; align-items:center; justify-content:space-between; border:1px solid rgba(255,255,255,0.05);">
+            <span style="font-size:0.75rem; color:#94a3b8; text-transform:uppercase;">Binance Pay ID</span>
+            <strong style="color:#fcd535; font-size:0.9rem; letter-spacing:0.5px;" id="binance-id-text">513483565</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <form class="auth-form" onsubmit="submitPayment(event)" style="position:relative; z-index:1;">
+        <div class="auth-field">
+          <label style="color:#22d3ee; font-weight:600; text-transform:uppercase; letter-spacing:1px; font-size:0.7rem;">Transaction ID (UTR)</label>
+          <input type="text" id="pay-utr" placeholder="Enter 12-digit UTR from app" required minlength="8" style="background:rgba(0,0,0,0.5); border:1px solid rgba(34,211,238,0.3); color:#fff; text-align:center; font-size:1.1rem; letter-spacing:2px; font-weight:bold; padding:0.8rem;" />
+        </div>
+        <button type="submit" class="btn-auth-submit pay-btn-glow" style="margin-top:0.8rem; background:linear-gradient(90deg, #a855f7, #22d3ee); border:none; color:#fff; font-size:0.9rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(168,85,247,0.4); transition:all 0.3s ease;">Verify & Complete Order →</button>
+      </form>
+
+      <div class="auth-msg" id="pay-msg" style="position:relative; z-index:1;"></div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script src="script.js"></script>
+
+  <!-- ── Reseller Purchase Modal ──────────────────────────────────── -->
+  <div class="modal-overlay" id="reseller-purchase-modal" onclick="closeModal('reseller-purchase-modal')">
+    <div class="modal-box auth-modal-box" onclick="event.stopPropagation()" style="max-width:460px;">
+      <div class="auth-inner-bg"></div>
+      <div class="auth-scanlines"></div>
+      <button class="modal-close" onclick="closeModal('reseller-purchase-modal')">✕</button>
+      <div class="auth-logo" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+        <span style="font-size:1.5rem;">💼</span>
+        <span>RESELLER<span class="logo-accent">PLAN</span></span>
+      </div>
+      <div style="text-align:center;margin-bottom:1.5rem;position:relative;z-index:1;">
+        <div style="font-size:2.5rem;font-weight:900;color:#fcd34d;font-family:var(--font-head);">₹999<span style="font-size:1rem;color:#94a3b8;font-weight:400;">/month</span></div>
+        <div style="color:#64748b;font-size:.9rem;margin-top:.3rem;">$12 USD / month</div>
+        <div style="margin:1rem auto;max-width:320px;background:rgba(252,211,77,.06);border:1px solid rgba(252,211,77,.2);border-radius:10px;padding:.8rem 1rem;font-size:.8rem;color:#cbd5e1;line-height:1.6;">
+          ✅ 50% off ALL panels &nbsp;|&nbsp; ✅ Dedicated login &nbsp;|&nbsp; ✅ Priority support
+        </div>
+      </div>
+      <p style="text-align:center;font-size:.8rem;color:#94a3b8;margin-bottom:1rem;position:relative;z-index:1;">Pay via UPI or Binance and enter your UTR below. We will create your reseller account within minutes.</p>
+      <div style="display:flex;gap:.8rem;margin-bottom:1.2rem;position:relative;z-index:1;justify-content:center;">
+        <div style="text-align:center;">
+          <p style="font-size:.7rem;color:#22d3ee;font-weight:700;margin-bottom:.4rem;">UPI (FamPay)</p>
+          <div style="background:#fff;padding:6px;border-radius:8px;display:inline-block;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=upi://pay?pa=purianurag@fam&pn=GokuResellerPlan&cu=INR" style="width:120px;height:120px;display:block;" />
+          </div>
+          <p style="font-size:.75rem;color:#a855f7;margin-top:.4rem;">purianurag@fam</p>
+        </div>
+        <div style="text-align:center;">
+          <p style="font-size:.7rem;color:#fcd535;font-weight:700;margin-bottom:.4rem;">Binance Pay</p>
+          <div style="background:#fff;padding:6px;border-radius:8px;display:inline-block;">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=513483565" style="width:120px;height:120px;display:block;" />
+          </div>
+          <p style="font-size:.75rem;color:#fcd535;margin-top:.4rem;">ID: 513483565</p>
+        </div>
+      </div>
+      <form onsubmit="submitResellerOrder(event)" style="position:relative;z-index:1;">
+        <div class="auth-field">
+          <label style="color:#fcd34d;font-weight:600;text-transform:uppercase;letter-spacing:1px;font-size:.7rem;">Your Name / Username</label>
+          <input type="text" id="res-name" placeholder="Enter your name" required style="background:rgba(0,0,0,.5);border:1px solid rgba(252,211,77,.3);color:#fff;" />
+        </div>
+        <div class="auth-field" style="margin-top:.8rem;">
+          <label style="color:#fcd34d;font-weight:600;text-transform:uppercase;letter-spacing:1px;font-size:.7rem;">Transaction ID (UTR)</label>
+          <input type="text" id="res-utr" placeholder="Enter UTR / Transaction ID" required minlength="6" style="background:rgba(0,0,0,.5);border:1px solid rgba(252,211,77,.3);color:#fff;text-align:center;font-size:1rem;letter-spacing:2px;font-weight:bold;" />
+        </div>
+        <div class="auth-field" style="margin-top:.8rem;">
+          <label style="color:#fcd34d;font-weight:600;text-transform:uppercase;letter-spacing:1px;font-size:.7rem;">Contact (Discord / WhatsApp)</label>
+          <input type="text" id="res-contact" placeholder="Discord: user#0000 or +91 number" required style="background:rgba(0,0,0,.5);border:1px solid rgba(252,211,77,.3);color:#fff;" />
+        </div>
+        <button type="submit" class="btn-auth-submit" style="margin-top:1rem;background:linear-gradient(90deg,#fcd34d,#f97316);border:none;color:#000;font-weight:900;">Submit Reseller Application →</button>
+      </form>
+      <div class="auth-msg" id="res-purchase-msg" style="position:relative;z-index:1;"></div>
+    </div>
+  </div>
+
+  <!-- ── Reseller Login Modal ─────────────────────────────────────── -->
+  <div class="modal-overlay" id="reseller-login-modal" onclick="closeModal('reseller-login-modal')">
+    <div class="modal-box auth-modal-box" onclick="event.stopPropagation()" style="max-width:420px;">
+      <div class="auth-inner-bg"></div>
+      <div class="auth-scanlines"></div>
+      <button class="modal-close" onclick="closeModal('reseller-login-modal')">✕</button>
+      <div class="auth-logo" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+        <span style="font-size:1.5rem;">🔐</span>
+        <span>RESELLER<span class="logo-accent">LOGIN</span></span>
+      </div>
+      <p style="text-align:center;font-size:.85rem;color:#94a3b8;margin-bottom:1.5rem;position:relative;z-index:1;">Enter your reseller credentials provided by the admin.</p>
+      <form onsubmit="handleResellerLogin(event)" style="position:relative;z-index:1;">
+        <div class="auth-field">
+          <label style="color:#22d3ee;font-weight:600;text-transform:uppercase;letter-spacing:1px;font-size:.7rem;">Username</label>
+          <input type="text" id="res-login-user" placeholder="Reseller username" required style="background:rgba(0,0,0,.5);border:1px solid rgba(34,211,238,.3);color:#fff;" />
+        </div>
+        <div class="auth-field" style="margin-top:.8rem;">
+          <label style="color:#22d3ee;font-weight:600;text-transform:uppercase;letter-spacing:1px;font-size:.7rem;">Password</label>
+          <input type="password" id="res-login-pass" placeholder="Reseller password" required style="background:rgba(0,0,0,.5);border:1px solid rgba(34,211,238,.3);color:#fff;" />
+        </div>
+        <button type="submit" class="btn-auth-submit" style="margin-top:1rem;background:linear-gradient(90deg,#22d3ee,#a855f7);border:none;color:#000;font-weight:900;">Login to Reseller Dashboard →</button>
+      </form>
+      <div class="auth-msg" id="res-login-msg" style="position:relative;z-index:1;"></div>
+    </div>
+  </div>
+
+</body>
+</html>
