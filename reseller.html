@@ -263,11 +263,30 @@
 
     @media(max-width:768px){
       main { padding: 1.5rem 1rem 3rem; }
-      .welcome-banner { padding: 1.8rem; }
-      header { padding: 0 1rem; height: 60px; }
+      .welcome-banner { padding: 1.5rem; gap: 1rem; }
+      header { padding: 1rem; height: auto; flex-direction: column; gap: 1rem; text-align: center; }
+      .header-right { width: 100%; justify-content: center; flex-wrap: wrap; }
       .welcome-banner::before { font-size: 5rem; right: 1rem; }
+      .plan-row { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+      .plan-prices { width: 100%; justify-content: flex-start; gap: 1rem; }
+      .info-box { padding: 1.5rem; }
+      .login-box { padding: 1.5rem; width: 90%; margin: 2rem auto; }
+      .payment-row { flex-direction: column; gap: 1.5rem; }
     }
   </style>
+  <!-- Security Script to prevent DevTools and right-click -->
+  <script>
+    // Prevent right-click and context menu
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    // Prevent common developer tools shortcuts
+    document.onkeydown = function(e) {
+      if (e.keyCode == 123) return false; // F12
+      if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false; // Ctrl+Shift+I/J/C
+      if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ctrl+U for View Source
+    };
+    // Prevent iframe manipulation
+    if (window.self !== window.top) window.top.location = window.self.location;
+  </script>
 </head>
 <body>
 

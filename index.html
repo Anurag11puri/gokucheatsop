@@ -21,6 +21,24 @@
   <link rel="preconnect" href="https://kiffmcsmfnfmzuwmtjsi.supabase.co" crossorigin />
   <!-- Supabase CDN — loaded synchronously to ensure auth.js works -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Security Headers -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://kiffmcsmfnfmzuwmtjsi.supabase.co; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://kiffmcsmfnfmzuwmtjsi.supabase.co; frame-ancestors 'none';" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+  <!-- Security Script to prevent DevTools and right-click -->
+  <script>
+    // Prevent right-click and context menu
+    document.addEventListener('contextmenu', event => event.preventDefault());
+    // Prevent common developer tools shortcuts
+    document.onkeydown = function(e) {
+      if (e.keyCode == 123) return false; // F12
+      if (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) return false; // Ctrl+Shift+I/J/C
+      if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ctrl+U for View Source
+    };
+    // Prevent iframe manipulation
+    if (window.self !== window.top) window.top.location = window.self.location;
+  </script>
 </head>
 
 <body>

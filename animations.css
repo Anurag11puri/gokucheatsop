@@ -493,6 +493,30 @@
   .float-el{display:none;}
 }
 
+/* Mobile: Hide profile name, show only avatar & arrow */
+@media(max-width:640px){
+  .user-display-name{display:none;}
+  .nav-user-chip{padding:.5rem .8rem;gap:.4rem;}
+  .nav-user-avatar{width:28px;height:28px;font-size:.75rem;}
+  .chevron-icon{width:14px;height:14px;}
+  .nav-links{max-width:70vw;}
+}
+
+/* Extra small phones */
+@media(max-width:480px){
+  .user-display-name{display:none;}
+  .nav-user-chip{padding:.4rem .5rem;gap:.3rem;}
+  .nav-user-avatar{width:24px;height:24px;font-size:.7rem;box-shadow:0 1px 6px rgba(168,85,247,.2);}
+  .chevron-icon{width:12px;height:12px;}
+  .navbar{padding:.8rem 1rem;}
+  .nav-inner{gap:.5rem;}
+  .nav-links{max-width:80vw;padding:4.5rem 1.5rem 2rem;}
+  .nav-auth-btn{padding:.4rem .8rem;font-size:.8rem;}
+  .user-dropdown-menu{width:160px;font-size:.8rem;padding:.3rem;}
+  .dropdown-item{padding:.5rem .6rem;font-size:.8rem;}
+  .dropdown-item svg{width:14px;height:14px;}
+}
+
 /* ============================================================
    ⚡ NEON NAV HOVER + TEXT ANIMATIONS — GOKU CHEATS
    ============================================================ */
